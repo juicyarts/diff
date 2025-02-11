@@ -76,6 +76,7 @@ type DiffFunc func([]string, reflect.Value, reflect.Value, interface{}) error
 // Differ a configurable diff instance
 type Differ struct {
 	TagName                string
+	Identifier             string
 	SliceOrdering          bool
 	DisableStructValues    bool
 	customValueDiffers     []ValueDiffer
@@ -263,6 +264,20 @@ func (d *Differ) diff(path []string, a, b reflect.Value, parent interface{}) err
 	return diffFunc(path, a, b, parent)
 }
 
+func (d *Differ) identifier(tag string, v reflect.Value) interface{} {
+	if v.Kind() != reflect.Struct {
+		return nil
+	}
+
+	for i := 0; i < v.NumField(); i++ {
+		if hasTagOption(tag, v.Type().Field(i), "identifier") || d.Identifier == v.Type().Field(i).Name {
+			return v.Field(i).Interface()
+		}
+	}
+
+	return nil
+}
+
 func (cl *Changelog) Add(t string, path []string, ftco ...interface{}) {
 	change := Change{
 		Type: t,
@@ -285,20 +300,6 @@ func tagName(tag string, f reflect.StructField) string {
 	}
 
 	return parts[0]
-}
-
-func identifier(tag string, v reflect.Value) interface{} {
-	if v.Kind() != reflect.Struct {
-		return nil
-	}
-
-	for i := 0; i < v.NumField(); i++ {
-		if hasTagOption(tag, v.Type().Field(i), "identifier") {
-			return v.Field(i).Interface()
-		}
-	}
-
-	return nil
 }
 
 func hasTagOption(tag string, f reflect.StructField, opt string) bool {

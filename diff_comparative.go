@@ -41,7 +41,7 @@ func (d *Differ) comparative(a, b reflect.Value) bool {
 		ak := getFinalValue(ae)
 
 		if ak.Kind() == reflect.Struct {
-			if identifier(d.TagName, ak) != nil {
+			if d.identifier(d.TagName, ak) != nil {
 				return true
 			}
 		}
@@ -52,7 +52,7 @@ func (d *Differ) comparative(a, b reflect.Value) bool {
 		bk := getFinalValue(be)
 
 		if bk.Kind() == reflect.Struct {
-			if identifier(d.TagName, bk) != nil {
+			if d.identifier(d.TagName, bk) != nil {
 				return true
 			}
 		}

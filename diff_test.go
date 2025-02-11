@@ -890,6 +890,54 @@ func TestDiffingOptions(t *testing.T) {
 	// some other options..
 }
 
+type testIdentifierType struct {
+	ID   int    `diff:"id"`
+	Name string `diff:"name"`
+}
+
+func TestDiffingOptionsIdentifier(t *testing.T) {
+	ident := "ID"
+	d, err := diff.NewDiffer(diff.Identifier(ident))
+
+	require.Nil(t, err)
+	assert.Equal(t, ident, d.Identifier)
+
+	srcArr := []testIdentifierType{
+		{
+			ID:   1,
+			Name: "Foo",
+		},
+		{
+			ID:   2,
+			Name: "Bar",
+		},
+		{
+			ID:   3,
+			Name: "Baz",
+		},
+	}
+
+	tgtArr := []testIdentifierType{
+		{
+			ID:   2,
+			Name: "Qux",
+		},
+		{
+			ID:   3,
+			Name: "Baz",
+		},
+		{
+			ID:   1,
+			Name: "Foo",
+		},
+	}
+
+	cl, err := d.Diff(srcArr, tgtArr)
+
+	require.Nil(t, err)
+	assert.Len(t, cl, 1)
+}
+
 func TestDiffPrivateField(t *testing.T) {
 	cl, err := diff.Diff(tstruct{private: 1}, tstruct{private: 3})
 	require.Nil(t, err)

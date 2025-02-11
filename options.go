@@ -32,6 +32,17 @@ func TagName(tag string) func(d *Differ) error {
 	}
 }
 
+// Identifier allows to define a struct field by name that should be used for identification
+// this way you can set identifiers through configuration to aovid the usage of `diff` specific struct tags for this scenario
+// which can come in handy if you are not in charge of the structs you are comparing
+// The `identifier` struct tag will still take precendence over this configuration, which also enables global/local configuration
+func Identifier(ident string) func(d *Differ) error {
+	return func(d *Differ) error {
+		d.Identifier = ident
+		return nil
+	}
+}
+
 // DisableStructValues disables populating a separate change for each item in a struct,
 // where the struct is being compared to a nil value
 func DisableStructValues() func(d *Differ) error {
@@ -60,10 +71,10 @@ func AllowTypeMismatch(enabled bool) func(d *Differ) error {
 	}
 }
 
-//StructMapKeySupport - Changelog paths do not provided structured object values for maps that contain complex
-//keys (such as other structs). You must enable this support via an option and it then uses msgpack to encode
-//path elements that are structs. If you don't have this on, and try to patch, your apply will fail for that
-//element.
+// StructMapKeySupport - Changelog paths do not provided structured object values for maps that contain complex
+// keys (such as other structs). You must enable this support via an option and it then uses msgpack to encode
+// path elements that are structs. If you don't have this on, and try to patch, your apply will fail for that
+// element.
 func StructMapKeySupport() func(d *Differ) error {
 	return func(d *Differ) error {
 		d.StructMapKeys = true
@@ -71,12 +82,12 @@ func StructMapKeySupport() func(d *Differ) error {
 	}
 }
 
-//DiscardComplexOrigin - by default, we are now keeping the complex struct associated with a create entry.
-//This allows us to fix the merge to new object issue of not having enough change log details when allocating
-//new objects. This however is a trade off of memory size and complexity vs correctness which is often only
-//necessary when embedding structs in slices and arrays. It memory constrained environments, it may be desirable
-//to turn this feature off however from a computational perspective, keeping the complex origin is actually quite
-//cheap so, make sure you're extremely clear on the pitfalls of turning this off prior to doing so.
+// DiscardComplexOrigin - by default, we are now keeping the complex struct associated with a create entry.
+// This allows us to fix the merge to new object issue of not having enough change log details when allocating
+// new objects. This however is a trade off of memory size and complexity vs correctness which is often only
+// necessary when embedding structs in slices and arrays. It memory constrained environments, it may be desirable
+// to turn this feature off however from a computational perspective, keeping the complex origin is actually quite
+// cheap so, make sure you're extremely clear on the pitfalls of turning this off prior to doing so.
 func DiscardComplexOrigin() func(d *Differ) error {
 	return func(d *Differ) error {
 		d.DiscardParent = true

@@ -66,7 +66,7 @@ func (d *Differ) diffSliceComparative(path []string, a, b reflect.Value) error {
 		ae := a.Index(i)
 		ak := getFinalValue(ae)
 
-		id := identifier(d.TagName, ak)
+		id := d.identifier(d.TagName, ak)
 		if id != nil {
 			c.addA(id, &ae)
 		}
@@ -76,7 +76,7 @@ func (d *Differ) diffSliceComparative(path []string, a, b reflect.Value) error {
 		be := b.Index(i)
 		bk := getFinalValue(be)
 
-		id := identifier(d.TagName, bk)
+		id := d.identifier(d.TagName, bk)
 		if id != nil {
 			c.addB(id, &be)
 		}
