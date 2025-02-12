@@ -270,8 +270,12 @@ func (d *Differ) identifier(tag string, v reflect.Value) interface{} {
 	}
 
 	for i := 0; i < v.NumField(); i++ {
-		if hasTagOption(tag, v.Type().Field(i), "identifier") || d.Identifier == v.Type().Field(i).Name {
-			return v.Field(i).Interface()
+		if hasTagOption(tag, v.Type().Field(i), "identifier") || v.Type().Field(i).Name == d.Identifier {
+			field := v.Field(i)
+			if field.Kind() == reflect.Ptr && !field.IsNil() {
+				return field.Elem().Interface()
+			}
+			return field.Interface()
 		}
 	}
 
