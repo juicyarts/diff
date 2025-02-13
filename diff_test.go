@@ -817,6 +817,19 @@ func TestFilterChangeType(t *testing.T) {
 	}
 }
 
+func TestSkipNilChange(t *testing.T) {
+	cl := diff.Changelog{
+		{To: "Foo"},
+		{To: nil},
+	}
+
+	ncl := cl.FilterOutNilChanges()
+	assert.Len(t, ncl, 1)
+	for _, e := range ncl {
+		assert.NotEqual(t, e.To, nil)
+	}
+}
+
 func TestStructValues(t *testing.T) {
 	cases := []struct {
 		Name       string
@@ -1012,6 +1025,7 @@ func TestDiffingPointerIdentifier(t *testing.T) {
 	require.Nil(t, err)
 	assert.Len(t, cl, 1)
 }
+
 func TestDiffPrivateField(t *testing.T) {
 	cl, err := diff.Diff(tstruct{private: 1}, tstruct{private: 3})
 	require.Nil(t, err)

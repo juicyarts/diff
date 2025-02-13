@@ -198,6 +198,19 @@ func (cl *Changelog) FilterChangeType(ct []string) Changelog {
 	return ncl
 }
 
+// FilterOutNilChanges skips changes that would set values to nil
+func (cl *Changelog) FilterOutNilChanges() Changelog {
+	var ncl Changelog
+
+	for _, c := range *cl {
+		if c.To != nil {
+			ncl = append(ncl, c)
+		}
+	}
+
+	return ncl
+}
+
 func (d *Differ) getDiffType(a, b reflect.Value) (DiffType, DiffFunc) {
 	switch {
 	case are(a, b, reflect.Struct, reflect.Invalid):
