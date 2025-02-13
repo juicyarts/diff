@@ -4,7 +4,10 @@
 
 package diff
 
-import "regexp"
+import (
+	"regexp"
+	"slices"
+)
 
 func pathmatch(filter, path []string) bool {
 	for i, f := range filter {
@@ -19,4 +22,8 @@ func pathmatch(filter, path []string) bool {
 	}
 
 	return true
+}
+
+func changeTypeMatch(ctWant []string, ctHave string) bool {
+	return slices.Contains(ctWant, ctHave)
 }

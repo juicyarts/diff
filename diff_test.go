@@ -792,6 +792,31 @@ func TestFilterOut(t *testing.T) {
 	}
 }
 
+func TestFilterChangeType(t *testing.T) {
+	cases := []struct {
+		Name     string
+		Filter   []string
+		Expected []string
+	}{
+		{"simple", []string{diff.CREATE, diff.DELETE}, []string{diff.CREATE}},
+	}
+
+	cl := diff.Changelog{
+		{Type: diff.CREATE},
+		{Type: diff.UPDATE},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.Name, func(t *testing.T) {
+			ncl := cl.FilterChangeType(tc.Filter)
+			assert.Len(t, ncl, len(tc.Expected))
+			for i, e := range tc.Expected {
+				assert.Equal(t, e, ncl[i].Type)
+			}
+		})
+	}
+}
+
 func TestStructValues(t *testing.T) {
 	cases := []struct {
 		Name       string

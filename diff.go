@@ -185,6 +185,19 @@ func (cl *Changelog) Filter(path []string) Changelog {
 	return ncl
 }
 
+// FilterChangeType filter changes based on the change type
+func (cl *Changelog) FilterChangeType(ct []string) Changelog {
+	var ncl Changelog
+
+	for _, c := range *cl {
+		if changeTypeMatch(ct, c.Type) {
+			ncl = append(ncl, c)
+		}
+	}
+
+	return ncl
+}
+
 func (d *Differ) getDiffType(a, b reflect.Value) (DiffType, DiffFunc) {
 	switch {
 	case are(a, b, reflect.Struct, reflect.Invalid):
