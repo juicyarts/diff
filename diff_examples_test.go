@@ -8,9 +8,9 @@ import (
 	"github.com/r3labs/diff/v3"
 )
 
-//Try to do a bunch of stuff that will result in some or all failures
-//when trying to apply either a valid or invalid changelog
-func ExamplePatchWithErrors() {
+// Try to do a bunch of stuff that will result in some or all failures
+// when trying to apply either a valid or invalid changelog
+func ExamplePatch_withErrors() {
 
 	type Fruit struct {
 		ID        int            `diff:"ID" json:"Identifier"`
@@ -109,7 +109,7 @@ func ExamplePatchWithErrors() {
 	//Output:
 }
 
-//ExampleMerge demonstrates how to use the Merge function
+// ExampleMerge demonstrates how to use the Merge function
 func ExampleMerge() {
 	type Fruit struct {
 		ID        int            `diff:"ID" json:"Identifier"`
@@ -169,8 +169,8 @@ func ExampleMerge() {
 	//Output: 8
 }
 
-//ExamplePrimitiveSlice demonstrates working with arrays and primitive values
-func ExamplePrimitiveSlice() {
+// ExamplePrimitiveSlice demonstrates working with arrays and primitive values
+func ExamplePatch_primitiveSlice() {
 	sla := []string{
 		"this",
 		"is",
@@ -238,23 +238,24 @@ func ExamplePrimitiveSlice() {
 	//Output: 5 changes made to string array; [simple a]
 }
 
-//ExampleComplexMapPatch demonstrates how to use the Patch function for complex slices
-//NOTE: There is a potential pitfall here, take a close look at b[2]. If patching the
-//      original, the operation will work intuitively however, in a merge situation we
-//      may not get everything we expect because it's a true diff between a and b and
-//      the diff log will not contain enough information to fully recreate b from an
-//      empty slice. This is exemplified in that the test "colors" is dropped in element
-//      3 of c. Change "colors" to "color" and see what happens. Keep in mind this only
-//      happens when we need to allocate a new complex element. In normal operations we
-//      fix for this by keeping a copy of said element in the diff log (as parent) and
-//      allocate such an element as a whole copy prior to applying any updates?
+// ExampleComplexMapPatch demonstrates how to use the Patch function for complex slices
+// NOTE: There is a potential pitfall here, take a close look at b[2]. If patching the
 //
-//      The new default is to carry this information forward, we invoke this pitfall
-//      by creating such a situation and explicitly telling diff to discard the parent
-//      In memory constrained environments if the developer is careful, they can use
-//      the discard feature but unless you REALLY understand what's happening here, use
-//      the default.
-func ExampleComplexSlicePatch() {
+//	original, the operation will work intuitively however, in a merge situation we
+//	may not get everything we expect because it's a true diff between a and b and
+//	the diff log will not contain enough information to fully recreate b from an
+//	empty slice. This is exemplified in that the test "colors" is dropped in element
+//	3 of c. Change "colors" to "color" and see what happens. Keep in mind this only
+//	happens when we need to allocate a new complex element. In normal operations we
+//	fix for this by keeping a copy of said element in the diff log (as parent) and
+//	allocate such an element as a whole copy prior to applying any updates?
+//
+//	The new default is to carry this information forward, we invoke this pitfall
+//	by creating such a situation and explicitly telling diff to discard the parent
+//	In memory constrained environments if the developer is careful, they can use
+//	the discard feature but unless you REALLY understand what's happening here, use
+//	the default.
+func ExamplePatch_complexSlice() {
 
 	type Content struct {
 		Text   string `diff:",create"`
@@ -315,8 +316,8 @@ func ExampleComplexSlicePatch() {
 	//Output: Patched 7 entries and encountered 3 errors
 }
 
-//ExampleComplexMapPatch demonstrates how to use the Patch function for complex slices.
-func ExampleComplexMapPatch() {
+// ExampleComplexMapPatch demonstrates how to use the Patch function for complex slices.
+func ExamplePatch_complexMap() {
 
 	type Key struct {
 		Value  string
@@ -380,7 +381,7 @@ func ExampleComplexMapPatch() {
 	//Output: 7
 }
 
-//ExamplePatch demonstrates how to use the Patch function
+// ExamplePatch demonstrates how to use the Patch function
 func ExamplePatch() {
 
 	type Key struct {
@@ -593,7 +594,7 @@ func ExampleFilter() {
 	// Output: diff.Changelog{diff.Change{Type:"update", Path:[]string{"id"}, From:1, To:2, parent:diff_test.Fruit{ID:1, Name:"Green Apple", Healthy:true, Nutrients:[]string{"vitamin c", "vitamin d"}, Tags:[]diff_test.Tag(nil)}}, diff.Change{Type:"create", Path:[]string{"nutrients", "2"}, From:interface {}(nil), To:"vitamin e", parent:interface {}(nil)}}
 }
 
-func ExamplePrivatePtr() {
+func ExampleDiff_privatePtr() {
 	type number struct {
 		value *big.Int
 		exp   int32
